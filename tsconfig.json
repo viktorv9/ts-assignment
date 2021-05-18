@@ -1,0 +1,16 @@
+{
+  "compilerOptions": {
+    "module": "commonjs",
+    "noImplicitReturns": true,
+    "noUnusedLocals": true,
+    "resolveJsonModule": true,
+    "esModuleInterop": true,
+    "outDir": "lib",
+    "sourceMap": true,
+    "strict": true,
+    "target": "es5",
+    "lib": ["DOM", "es2019"]
+  },
+  "compileOnSave": true,
+  "include": ["src"]
+}
