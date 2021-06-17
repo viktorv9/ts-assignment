@@ -22,6 +22,13 @@ export class App {
     const pixiAssetPaths = new Map<string, string>(
       Object.entries({
         someImage: "./assets/images/some-image.png",
+        board: "./assets/images/board.png",
+        apple: "./assets/images/apple.png",
+        head: "./assets/images/head.png",
+        body: "./assets/images/body.png",
+        bendL: "./assets/images/bend-l.png",
+        bendR: "./assets/images/bend-r.png",
+        tail: "./assets/images/tail.png",
         someAnimation: "./assets/animations/some-animation.json",
       })
     );
