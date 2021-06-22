@@ -8,7 +8,7 @@ export class Board {
 
         this.grid = []
         for (let x = 0; x < arraySize; x++) {
-            this.grid.push(new Array(8).fill(null))
+            this.grid.push(new Array(arraySize).fill(null))
         }
     }
 

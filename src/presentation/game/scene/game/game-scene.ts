@@ -9,24 +9,26 @@ import * as PIXI from "pixi.js";
 
 export class GameScene extends PixiScene {
 
-  private boardScale = 0.7; // game scale kinda hinges on this. does make zooming possible
+  private boardScale = 0.8; // game scale kinda hinges on this. does make zooming possible
+  private tileSize = 80 * this.boardScale; // 80 is based on the size of a tile
 
   constructor(context: Context, manager: PixiSceneManager) {
     super(manager);
-    this.draw(context);
+    this.drawScene(context);
   }
 
-  draw(context: Context) {
+  drawScene(context: Context) {
     const boardTexture = context.pixiAssetLoader.getResource("board");
 
     const board = new PIXI.Sprite(boardTexture.texture);
-    board.position.set(context.appSize.x * 0.5, context.appSize.y * 0.5);
+    board.position.set(0, context.appSize.y * 0.2);
     board.scale.set(this.boardScale);
-    board.anchor.set(0.5, 0.5);
     this.container.addChild(board);
 
     let gameBoard = new Board();
-    gameBoard.spawnApple();
+    for (let x = 0; x < 48; x++) {
+      gameBoard.spawnApple();
+    }
 
     let gameGrid = gameBoard.getGrid;
 
@@ -35,7 +37,7 @@ export class GameScene extends PixiScene {
 
         let tileObject = gameGrid[x][y];
         if (tileObject != null) {
-          tileObject.draw();
+          this.drawObject(tileObject, context);
         }
 
       }
@@ -50,5 +52,22 @@ export class GameScene extends PixiScene {
     // animatedRunner.play();
 
     // this.container.addChild(animatedRunner.anim);
+  }
+
+  drawObject(object : any, context: Context) {
+    
+    const appleTexture = context.pixiAssetLoader.getResource("apple");
+    const apple = new PIXI.Sprite(appleTexture.texture);
+    apple.scale.set(this.boardScale);
+    apple.anchor.set(0.5, 0.5);
+
+    apple.angle = object.rotation;
+    let xOffset = this.tileSize * object.x + this.tileSize / 2;
+    let yOffset = this.tileSize * object.y + this.tileSize / 2;
+    
+    // apple.anchor.set(0, 0);
+    apple.position.set(0 + xOffset, context.appSize.y * 0.2 + yOffset);
+
+    this.container.addChild(apple);
   }
 }
