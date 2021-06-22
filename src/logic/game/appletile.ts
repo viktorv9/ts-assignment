@@ -1,4 +1,3 @@
-
 export class AppleTile {
 
     private x;
@@ -9,8 +8,10 @@ export class AppleTile {
         this.x = x;
         this.y = y;
         this.rotation = rotation;
+    }
 
-        console.log(this.rotation)
+    public getTexture(context : any) {
+        return context.pixiAssetLoader.getResource("apple");
     }
 
 }

@@ -26,8 +26,7 @@ export class App {
         apple: "./assets/images/apple.png",
         head: "./assets/images/head.png",
         body: "./assets/images/body.png",
-        bendL: "./assets/images/bend-l.png",
-        bendR: "./assets/images/bend-r.png",
+        bend: "./assets/images/bend.png",
         tail: "./assets/images/tail.png",
         someAnimation: "./assets/animations/some-animation.json",
       })

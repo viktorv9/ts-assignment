@@ -1,4 +1,5 @@
 import { AppleTile } from "./appletile";
+import { SnakeTile } from "./snaketile";
 
 export class Board {
     private grid;
@@ -10,6 +11,10 @@ export class Board {
         for (let x = 0; x < arraySize; x++) {
             this.grid.push(new Array(arraySize).fill(null))
         }
+
+        this.grid[1][4] = new SnakeTile(1, 4, "tail", 90)
+        this.grid[2][4] = new SnakeTile(2, 4, "body", 90)
+        this.grid[3][4] = new SnakeTile(3, 4, "head", 90)
     }
 
     spawnApple() {

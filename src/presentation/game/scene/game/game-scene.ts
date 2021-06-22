@@ -2,42 +2,60 @@ import { Context } from "../../../context";
 import { PixiScene } from "../pixi-scene";
 import { PixiSceneManager } from "../pixi-scene-manager";
 import { Board } from "../../../../logic/game/board";
+import { Snake } from "../../../../logic/game/snake";
 import * as PIXI from "pixi.js";
-// import { PixiAnimatedSprite } from "../../pixi/pixi-animated-sprite";
-
-// import { GameBoard } from "./board";
+import { SnakeTile } from "../../../../logic/game/snaketile";
 
 export class GameScene extends PixiScene {
 
-  private boardScale = 0.8; // game scale kinda hinges on this. does make zooming possible
+  private boardScale = 0.813; // game scale kinda hinges on this, which isnt great but does make zooming possible
   private tileSize = 80 * this.boardScale; // 80 is based on the size of a tile
+
+  private gameBoard = new Board();
+  private snake = new Snake();
+
+  private context : Context;
+  private ticker = new PIXI.Ticker();
+  private elapsedTicksSinceLastFrame = 0;
 
   constructor(context: Context, manager: PixiSceneManager) {
     super(manager);
-    this.drawScene(context);
+    this.context = context;
+
+    this.gameBoard.spawnApple();
+
+    this.ticker.autoStart = false;
+    this.ticker.add(() => {
+      this.gameLoop()
+    });
+    this.ticker.start();
   }
 
-  drawScene(context: Context) {
-    const boardTexture = context.pixiAssetLoader.getResource("board");
+  private gameLoop() {
+    this.elapsedTicksSinceLastFrame++;
+    if (this.elapsedTicksSinceLastFrame > 10) {
+      this.snake.nextFrame(this.gameBoard);
+      this.drawScene();
+      this.elapsedTicksSinceLastFrame = 0;
+    }
+  }
+
+  public drawScene() {
+    const boardTexture = this.context.pixiAssetLoader.getResource("board");
 
     const board = new PIXI.Sprite(boardTexture.texture);
-    board.position.set(0, context.appSize.y * 0.2);
+    board.position.set(0, this.context.appSize.y * 0.2);
     board.scale.set(this.boardScale);
     this.container.addChild(board);
 
-    let gameBoard = new Board();
-    for (let x = 0; x < 48; x++) {
-      gameBoard.spawnApple();
-    }
-
-    let gameGrid = gameBoard.getGrid;
+    let gameGrid = this.gameBoard.getGrid;
 
     for (let x = 0; x < gameGrid.length; x++) {
       for (let y = 0; y < gameGrid.length; y++) {
 
         let tileObject = gameGrid[x][y];
         if (tileObject != null) {
-          this.drawObject(tileObject, context);
+          this.drawObject(tileObject);
         }
 
       }
@@ -54,20 +72,19 @@ export class GameScene extends PixiScene {
     // this.container.addChild(animatedRunner.anim);
   }
 
-  drawObject(object : any, context: Context) {
+  drawObject(object : any) {
     
-    const appleTexture = context.pixiAssetLoader.getResource("apple");
-    const apple = new PIXI.Sprite(appleTexture.texture);
-    apple.scale.set(this.boardScale);
-    apple.anchor.set(0.5, 0.5);
+    const objectTexture = object.getTexture(this.context);
+    const objectSprite = new PIXI.Sprite(objectTexture.texture);
+    objectSprite.scale.set(this.boardScale);
+    objectSprite.anchor.set(0.5, 0.5);
 
-    apple.angle = object.rotation;
+    objectSprite.angle = object.rotation;
     let xOffset = this.tileSize * object.x + this.tileSize / 2;
     let yOffset = this.tileSize * object.y + this.tileSize / 2;
     
-    // apple.anchor.set(0, 0);
-    apple.position.set(0 + xOffset, context.appSize.y * 0.2 + yOffset);
+    objectSprite.position.set(0 + xOffset, this.context.appSize.y * 0.2 + yOffset);
 
-    this.container.addChild(apple);
+    this.container.addChild(objectSprite);
   }
 }
