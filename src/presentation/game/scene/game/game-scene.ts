@@ -4,11 +4,8 @@ import { PixiSceneManager } from "../pixi-scene-manager";
 import { Board } from "../../../../logic/game/board";
 import { Snake } from "../../../../logic/game/snake";
 import * as PIXI from "pixi.js";
-import { SnakeTile } from "../../../../logic/game/snaketile";
 
 export class GameScene extends PixiScene {
-
-  private manager;
 
   private boardScale = 0.813; // game scale kinda hinges on this, which isnt great but does make zooming possible
   private tileSize = 80 * this.boardScale; // 80 is based on the size of a tile
