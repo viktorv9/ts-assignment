@@ -12,7 +12,8 @@ export class Board {
             this.grid.push(new Array(arraySize).fill(null))
         }
 
-        this.grid[1][4] = new SnakeTile(1, 4, "tail", 90)
+        this.grid[0][4] = new SnakeTile(0, 4, "tail", 90)
+        this.grid[1][4] = new SnakeTile(1, 4, "body", 90)
         this.grid[2][4] = new SnakeTile(2, 4, "body", 90)
         this.grid[3][4] = new SnakeTile(3, 4, "head", 90)
     }

@@ -8,6 +8,8 @@ import { SnakeTile } from "../../../../logic/game/snaketile";
 
 export class GameScene extends PixiScene {
 
+  private manager;
+
   private boardScale = 0.813; // game scale kinda hinges on this, which isnt great but does make zooming possible
   private tileSize = 80 * this.boardScale; // 80 is based on the size of a tile
 
@@ -18,11 +20,16 @@ export class GameScene extends PixiScene {
   private ticker = new PIXI.Ticker();
   private elapsedTicksSinceLastFrame = 0;
 
+  private keyboardListener : any;
+  private registeredDirection = "RIGHT";
+
   constructor(context: Context, manager: PixiSceneManager) {
     super(manager);
+    this.manager = manager;
     this.context = context;
 
     this.gameBoard.spawnApple();
+    this.setupInputHandler();
 
     this.ticker.autoStart = false;
     this.ticker.add(() => {
@@ -31,16 +38,56 @@ export class GameScene extends PixiScene {
     this.ticker.start();
   }
 
+  private setupInputHandler() {
+
+    this.keyboardListener = (event: { code: any; }) => {
+
+      switch(event.code) {
+        case "ArrowUp":
+          if (this.snake.getCurrentDirection != "DOWN") {
+            this.registeredDirection = "UP"
+          }
+          break;
+        case "ArrowDown":
+          if (this.snake.getCurrentDirection != "UP") {
+            this.registeredDirection = "DOWN"
+          }
+          break;
+        case "ArrowRight":
+          if (this.snake.getCurrentDirection != "LEFT") {
+            this.registeredDirection = "RIGHT"
+          }
+          break;
+        case "ArrowLeft":
+          if (this.snake.getCurrentDirection != "RIGHT") {
+            this.registeredDirection = "LEFT"
+          }
+          break;
+      }
+
+    };
+
+    document.addEventListener("keydown", this.keyboardListener);
+  }
+
   private gameLoop() {
+
+    // console.log(this.snake.currentDirection);
+
     this.elapsedTicksSinceLastFrame++;
     if (this.elapsedTicksSinceLastFrame > 10) {
-      this.snake.nextFrame(this.gameBoard);
-      this.drawScene();
+      if (!this.snake.isAlive) {
+        this.manager.goTo(3);
+      } else {
+        this.snake.addMovement(this.registeredDirection);
+        this.snake.nextFrame(this.gameBoard, this.context);
+        this.drawScene();
+      }
       this.elapsedTicksSinceLastFrame = 0;
     }
   }
 
-  public drawScene() {
+  private drawScene() {
     const boardTexture = this.context.pixiAssetLoader.getResource("board");
 
     const board = new PIXI.Sprite(boardTexture.texture);
@@ -60,6 +107,8 @@ export class GameScene extends PixiScene {
 
       }
     }
+
+    
 
     // const apeAnimation = context.pixiAssetLoader.getResource("someAnimation");
     
@@ -87,4 +136,5 @@ export class GameScene extends PixiScene {
 
     this.container.addChild(objectSprite);
   }
+
 }
