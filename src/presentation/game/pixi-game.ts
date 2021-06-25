@@ -5,7 +5,10 @@ import { GameScene } from "./scene/game/game-scene";
 import { PixiSceneManager } from "./scene/pixi-scene-manager";
 import { AuthScene } from "./scene/auth/auth-scene";
 import { SplashScene } from "./scene/splash/splash-scene";
+import { PregameScene } from "./scene/pre/pregame-scene";
 import { Color } from "../../logic/rendering/color";
+import { WinScene } from "./scene/end/win-scene";
+import { LoseScene } from "./scene/end/lose-scene";
 
 export class PixiGame {
   private sceneManager: PixiSceneManager;
@@ -29,7 +32,10 @@ export class PixiGame {
       [
         (manager: PixiSceneManager) => new SplashScene(context, manager),
         (manager: PixiSceneManager) => new AuthScene(context, manager),
+        (manager: PixiSceneManager) => new PregameScene(context, manager),
         (manager: PixiSceneManager) => new GameScene(context, manager),
+        (manager: PixiSceneManager) => new WinScene(context, manager),
+        (manager: PixiSceneManager) => new LoseScene(context, manager),
         (manager: PixiSceneManager) => new LeaderboardScene(context, manager),
       ],
       3

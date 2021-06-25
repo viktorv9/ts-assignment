@@ -3,6 +3,7 @@ import { PixiScene } from "../pixi-scene";
 import { PixiSceneManager } from "../pixi-scene-manager";
 import { Board } from "../../../../logic/game/board";
 import { Snake } from "../../../../logic/game/snake";
+import { Color } from "../../../../logic/rendering/color";
 import * as PIXI from "pixi.js";
 
 export class GameScene extends PixiScene {
@@ -69,12 +70,18 @@ export class GameScene extends PixiScene {
 
   private gameLoop() {
 
-    // console.log(this.snake.currentDirection);
-
     this.elapsedTicksSinceLastFrame++;
     if (this.elapsedTicksSinceLastFrame > 10) {
       if (!this.snake.isAlive) {
-        this.manager.goTo(3);
+        if (this.snake.score >= 20) {
+          this.manager.goTo(4);
+        } else {
+          this.manager.goTo(5);
+        }
+
+        this.gameBoard = new Board();
+        this.snake = new Snake();
+        this.ticker.stop();
       } else {
         this.snake.addMovement(this.registeredDirection);
         this.snake.nextFrame(this.gameBoard, this.context);
@@ -106,16 +113,15 @@ export class GameScene extends PixiScene {
     }
 
     
+    const bottomText = new PIXI.Text("Eat 20 apples to win!", {fontSize: 50, fill: Color.white().hexCode});
+    bottomText.anchor.set(0.5, 0.5);
+    bottomText.position.set(this.context.appSize.x * 0.5, this.context.appSize.y * 0.8)
+    this.container.addChild(bottomText);
 
-    // const apeAnimation = context.pixiAssetLoader.getResource("someAnimation");
-    
-    // const animatedRunner = new PixiAnimatedSprite("Run", apeAnimation);
-    // animatedRunner.position.set(context.appSize.x * 0.5, context.appSize.y * 0.6);
-    // animatedRunner.anchor.set(0.5, 0.5);
-    // animatedRunner.anim.animationSpeed = 0.3;
-    // animatedRunner.play();
-
-    // this.container.addChild(animatedRunner.anim);
+    const topText = new PIXI.Text("Score: " + this.snake.score, {fontSize: 50, fill: Color.white().hexCode});
+    topText.anchor.set(0, 0.5);
+    topText.position.set(0, this.context.appSize.y * 0.235)
+    this.container.addChild(topText);
   }
 
   drawObject(object : any) {

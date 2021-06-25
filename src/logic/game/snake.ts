@@ -200,4 +200,8 @@ export class Snake {
     public get isAlive() {
         return this.alive;
     }
+
+    public get score() {
+        return this.snakeLength-3;
+    }
 }
