@@ -21,6 +21,8 @@ export class PregameScene extends PixiScene {
 
       if (event.code == "Space") {
         this.manager.goTo(3);
+      } else if (event.code == "Enter") {
+        this.manager.goTo(6);
       }
 
     };

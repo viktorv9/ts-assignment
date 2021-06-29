@@ -26,5 +26,10 @@ export class LoseScene extends PixiScene {
     text3.anchor.set(0.5, 0.7);
     text3.position.set(context.appSize.x * 0.5, context.appSize.y * 0.8)
     this.container.addChild(text3);
+
+    const text4 = new PIXI.Text("Press 'enter' to see the leaderboard.", {fontSize: 30, fill: Color.white().hexCode});
+    text4.anchor.set(0.5, 0.7);
+    text4.position.set(context.appSize.x * 0.5, context.appSize.y * 0.9)
+    this.container.addChild(text4);
   }
 }

@@ -2,7 +2,7 @@ import firebase from "firebase/app";
 import "firebase/firestore";
 import { LeaderboardProvider } from "./leaderboard-provider";
 import { Observable } from "rxjs";
-import { Leaderboard } from "./leaderboard";
+import { LeaderboardEntry } from "./leaderboard";
 
 export class FirestoreLeaderboardProvider implements LeaderboardProvider {
   private firestore: firebase.firestore.Firestore;
@@ -13,16 +13,25 @@ export class FirestoreLeaderboardProvider implements LeaderboardProvider {
     this.collectionReference = this.firestore.collection("leaderboard");
   }
 
-  public async listLeaderboard(
-    startAt: any | null,
-    limit: number,
-    orderBy: any,
-    order: "asc" | "desc"
-  ): Promise<Observable<Array<Leaderboard>>> {
-    throw new Error("method not implemented");
+  public async listLeaderboard(): Promise<Array<LeaderboardEntry>> {
+    return new Promise((resolve, reject) => {
+      this.collectionReference.orderBy("score", "desc").limit(10).get()
+      .then((querySnapshot) => {
+          let entries: LeaderboardEntry[] = [];
+          querySnapshot.forEach((doc) => {
+              entries.push(new LeaderboardEntry(doc.data().userId, doc.data().score, doc.data().characterUsed, doc.data().username));
+              resolve(entries);
+          });
+      });
+    });
   }
 
-  createLeaderboard(leaderboard: Leaderboard): Promise<void> {
-    throw new Error("Method not implemented.");
+  createLeaderboard(leaderboard: LeaderboardEntry): Promise<void> {
+    return new Promise((resolve, reject) => {
+      this.collectionReference.add(Object.fromEntries(leaderboard.toMap()))
+      .then(() => {
+        resolve();
+      })
+    });
   }
 }

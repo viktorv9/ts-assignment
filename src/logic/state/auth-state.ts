@@ -19,8 +19,16 @@ export class AuthState {
     this._user = null;
     this._observable = new Observable<User | null>((subscriber) => {
       firebase.auth().onAuthStateChanged((user) => {
+        let displayName : string;
+        if (user?.displayName != null) {
+          displayName = user?.displayName!;
+        } else if (user?.email != null) {
+          displayName = user?.email?.split('@')[0];
+        } else {
+          displayName = "undefined"
+        }
         if (user) {
-          subscriber.next(new User(user.uid, user.displayName ?? ""));
+          subscriber.next(new User(user.uid, displayName));
         } else {
           subscriber.next(null);
         }

@@ -1,12 +1,7 @@
 import { Observable } from "rxjs";
-import { Leaderboard } from "./leaderboard";
+import { LeaderboardEntry } from "./leaderboard";
 
 export interface LeaderboardProvider {
-  listLeaderboard(
-    startAt: any | null,
-    limit: number,
-    orderBy: any,
-    order: string
-  ): Promise<Observable<Array<Leaderboard>>>;
-  createLeaderboard(leaderboard: Leaderboard): Promise<void>;
+  listLeaderboard(): Promise<Array<LeaderboardEntry>>;
+  createLeaderboard(leaderboard: LeaderboardEntry): Promise<void>;
 }

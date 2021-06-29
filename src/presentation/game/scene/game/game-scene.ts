@@ -4,7 +4,10 @@ import { PixiSceneManager } from "../pixi-scene-manager";
 import { Board } from "../../../../logic/game/board";
 import { Snake } from "../../../../logic/game/snake";
 import { Color } from "../../../../logic/rendering/color";
+import { LeaderboardProvider } from "../../../../data/leaderboard/leaderboard-provider";
+import { FirestoreLeaderboardProvider } from "../../../../data/leaderboard/firestore-leaderboard-provider";
 import * as PIXI from "pixi.js";
+import { LeaderboardEntry } from "../../../../data/leaderboard/leaderboard";
 
 export class GameScene extends PixiScene {
 
@@ -15,6 +18,7 @@ export class GameScene extends PixiScene {
   private snake = new Snake();
 
   private context : Context;
+  private leaderboardProvider : LeaderboardProvider;
   private ticker = new PIXI.Ticker();
   private elapsedTicksSinceLastFrame = 0;
 
@@ -25,6 +29,7 @@ export class GameScene extends PixiScene {
     super(manager);
     this.manager = manager;
     this.context = context;
+    this.leaderboardProvider = new FirestoreLeaderboardProvider;
 
     this.gameBoard.spawnApple();
     this.setupInputHandler();
@@ -73,6 +78,9 @@ export class GameScene extends PixiScene {
     this.elapsedTicksSinceLastFrame++;
     if (this.elapsedTicksSinceLastFrame > 10) {
       if (!this.snake.isAlive) {
+        
+        this.leaderboardProvider.createLeaderboard(new LeaderboardEntry(this.context.authState.user?.id!, this.snake.score, 0, this.context.authState.user?.displayName!));
+
         if (this.snake.score >= 20) {
           this.manager.goTo(4);
         } else {

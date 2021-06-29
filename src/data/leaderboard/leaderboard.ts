@@ -1,12 +1,10 @@
-export class Leaderboard {
-  id: string;
+export class LeaderboardEntry {
   userId: string;
   score: number;
   characterUsed: number;
   username: string;
 
-  constructor(id: string, userId: string, score: number, characterUsed: number, username: string) {
-    this.id = id;
+  constructor(userId: string, score: number, characterUsed: number, username: string) {
     this.userId = userId;
     this.score = score;
     this.username = username;
@@ -16,16 +14,16 @@ export class Leaderboard {
   public toMap(): Map<string, any> {
     return new Map(
       Object.entries({
-        id: this.id,
         userId: this.userId,
         score: this.score,
+        username: this.username,
+        characterUsed: this.characterUsed
       })
     );
   }
 
-  public static fromMap(map: Map<string, any>): Leaderboard {
-    return new Leaderboard(
-      (map?.get("id") as string) ?? "",
+  public static fromMap(map: Map<string, any>): LeaderboardEntry {
+    return new LeaderboardEntry(
       (map?.get("userId") as string) ?? "",
       (map?.get("score") as number) ?? -1,
       (map?.get("characterUsed") as number) ?? "",
